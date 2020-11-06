@@ -766,7 +766,7 @@ public class VideoController {
         }*/
         // cacheFile.delete();
         // inputFile.delete();
-        return error;
+        return !error;
     }
 
     @SuppressWarnings({"unused", "RedundantSuppression"})
