@@ -349,6 +349,7 @@ public class VideoController {
                         InputSurface inputSurface = null;
                         OutputSurface outputSurface = null;
 
+                        //noinspection RedundantSuppression
                         try {
                             long videoTime = -1;
                             boolean outputDone = false;
@@ -502,7 +503,6 @@ public class VideoController {
                                     }
                                 }
 
-                                //noinspection ConstantConditions
                                 boolean decoderOutputAvailable = !decoderDone;
                                 boolean encoderOutputAvailable = true;
                                 while (decoderOutputAvailable || encoderOutputAvailable) {
@@ -557,7 +557,6 @@ public class VideoController {
                                                 }
 
                                                 MediaFormat newFormat = MediaFormat.createVideoFormat(MIME_TYPE, targetWidth, targetHeight);
-                                                //noinspection ConstantConditions
                                                 if (sps != null && pps != null) {
                                                     newFormat.setByteBuffer("csd-0", sps);
                                                     newFormat.setByteBuffer("csd-1", pps);
@@ -590,14 +589,12 @@ public class VideoController {
                                             } else {
                                                 doRender = info.size != 0 || info.presentationTimeUs != 0;
                                             }
-                                            //noinspection ConstantConditions
                                             if (endTime > 0 && info.presentationTimeUs >= endTime) {
                                                 inputDone = true;
                                                 decoderDone = true;
                                                 doRender = false;
                                                 info.flags |= MediaCodec.BUFFER_FLAG_END_OF_STREAM;
                                             }
-                                            //noinspection ConstantConditions
                                             if (startTime > 0 && videoTime == -1) {
                                                 if (info.presentationTimeUs < startTime) {
                                                     doRender = false;
@@ -658,7 +655,6 @@ public class VideoController {
                                         }
                                 }
                             }
-                            //noinspection ConstantConditions
                             if (videoTime != -1) {
                                 videoStartTime = videoTime;
                             }
@@ -695,7 +691,7 @@ public class VideoController {
                 }
             } catch (Exception e) {
                 error = true;
-                Log.e("tmessages", e.getMessage());
+                Log.e("tmessages", "Received error!", e);
             } finally {
                 if (extractor != null) {
                     extractor.release();
@@ -704,10 +700,10 @@ public class VideoController {
                     try {
                         mediaMuxer.finishMovie(false);
                     } catch (Exception e) {
-                        Log.e("tmessages", e.getMessage());
+                        Log.e("tmessages", "mediaMuxer.finishMovie failed!", e);
                     }
                 }
-                Log.e("tmessages", "time = " + (System.currentTimeMillis() - time));
+                Log.d("tmessages", "time = " + (System.currentTimeMillis() - time));
             }
         } else {
             didWriteData(true, true);
